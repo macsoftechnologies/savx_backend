@@ -78,4 +78,20 @@ export class VerifyOtpDto {
   @ApiProperty()
   @IsString()
   OTP: string;
+
+  @ApiProperty()
+  @IsString()
+  deviceToken: string;
+
+  @ApiProperty()
+  @IsString()
+  deviceType: string;
+
+  @ApiProperty()
+  @IsString()
+  deviceModel: string;
+
+  @ApiProperty()
+  @IsString()
+  osVersion: string;
 }

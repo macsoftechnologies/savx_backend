@@ -13,6 +13,7 @@ export class AuthService {
       countryCode: user.countryCode,
       mobileNumber: user.mobileNumber,
       role: user.role,
+      sessionId: user.sessionId,
     };
     return {
       access_token: this.jwtService.sign(payload),

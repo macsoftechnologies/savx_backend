@@ -31,6 +31,9 @@ export class User extends Document {
   @Prop()
   OTP: string;
 
+  @Prop()
+  OTPExpiryTime: number;
+
   @Prop({ default: false })
   @IsOptional()
   isDeleted?: boolean;

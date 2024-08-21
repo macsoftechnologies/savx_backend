@@ -4,12 +4,18 @@ import { Model } from 'mongoose';
 import { SendOtpDto, VerifyOtpDto } from './dto/user.dto';
 import { User } from './dto/user.schema';
 import { AuthService } from 'src/auth/auth.service';
+import { uuid } from 'uuidv4';
+import { UserSessionsService } from 'src/user-sessions/user-sessions.service';
+import moment = require('moment');
+
+const OTP_VALIDITY_DURATION_IN_SECONDS = 5 * 60;
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
     private authService: AuthService,
+    private userSessionService: UserSessionsService,
   ) {}
 
   async create(params: any): Promise<any> {
@@ -64,7 +70,12 @@ export class UserService {
             mobileNumber: params.mobileNumber,
             isDeleted: false,
           },
-          { OTP },
+          {
+            OTP,
+            OTPExpiryTime: moment()
+              .add(OTP_VALIDITY_DURATION_IN_SECONDS, 'seconds')
+              .valueOf(),
+          },
         );
       } else {
         await this.userModel.create({
@@ -101,11 +112,37 @@ export class UserService {
         .lean();
 
       if (user) {
-        if (user.OTP == params.OTP) {
+        if (user.OTP == params.OTP && user.OTPExpiryTime > moment().valueOf()) {
           delete user.OTP;
+
+          const sessionId = uuid();
+
           const data: any = await this.authService.login({
             ...user,
+            sessionId,
           });
+
+          await this.userModel.updateOne(
+            {
+              countryCode: params.countryCode,
+              mobileNumber: params.mobileNumber,
+              isDeleted: false,
+            },
+            {
+              OTP: '',
+              OTPExpiryTime: 0,
+            },
+          );
+
+          await this.userSessionService.create({
+            userId: user._id,
+            sessionId,
+            deviceType: params.deviceType,
+            deviceModel: params.deviceModel,
+            osVersion: params.osVersion,
+            deviceToken: params.deviceToken,
+          });
+
           return {
             statusCode: HttpStatus.OK,
             data: {

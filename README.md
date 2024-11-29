@@ -8,7 +8,7 @@ Sav-X Description
 
 ## Node Version
 
-16.13.0
+20.0.0
 
 ## Installation
 

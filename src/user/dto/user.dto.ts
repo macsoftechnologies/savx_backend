@@ -1,38 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { PaginationDto } from 'src/shared/dto/shared.dto';
-
-enum likeType {
-  'story' = 'story',
-  'album' = 'album',
-  'artist' = 'artist',
-}
-
-enum genderType {
-  'male' = 'male',
-  'female' = 'female',
-  'other' = 'other',
-}
-
-enum searchType {
-  'stories' = 'stories',
-  'albums' = 'albums',
-}
-
-enum ageGroupType {
-  '18-25' = '18-25',
-  '25-35' = '25-35',
-  '35-45' = '35-45',
-  '45-55' = '45-55',
-  '55 and above' = '55 and above',
-}
+import { IsEmail, IsNumber, IsString } from 'class-validator';
 
 export class AddUserDto {
   @ApiProperty()
@@ -94,4 +61,26 @@ export class VerifyOtpDto {
   @ApiProperty()
   @IsString()
   osVersion: string;
+}
+
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsNumber()
+  age: number;
+
+  @ApiProperty()
+  @IsString()
+  gender: string;
+
+  @ApiProperty()
+  @IsString()
+  emailAddress: string;
+
+  @ApiProperty()
+  @IsString()
+  address: string;
 }

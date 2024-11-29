@@ -1,6 +1,22 @@
 import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+export enum paymentMethodType {
+  'PHONE_PE' = 'phone-pe',
+  'G_PAY' = 'g-pay',
+  'PAYTM' = 'paytm',
+}
+
+export enum statusType {
+  'ACTIVE' = 'active',
+  'IN_ACTIVE' = 'in-active',
+}
+
+export enum paymentType {
+  'AUTOMATIC' = 'automatic',
+  'MANUAL' = 'manual',
+}
+
 export enum booleanType {
   'true' = 'true',
   'false' = 'false',

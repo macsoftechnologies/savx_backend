@@ -1,7 +1,17 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { SendOtpDto, VerifyOtpDto } from './dto/user.dto';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  Put,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { SendOtpDto, UpdateUserDto, VerifyOtpDto } from './dto/user.dto';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -50,6 +60,24 @@ export class UserController {
   async verifyOtp(@Body() body: VerifyOtpDto) {
     try {
       return await this.userService.verifyOtp(body);
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        errorMessage: error.message,
+      };
+    }
+  }
+
+  // Verify OTP
+  @ApiTags('User')
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  // @SetMetadata('roles', ['customer'])
+  @ApiBearerAuth('JWT')
+  @Put()
+  async update(@Request() req, @Body() body: UpdateUserDto) {
+    try {
+      return await this.userService.updateUser(req.user._id, body);
     } catch (error) {
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -175,4 +175,23 @@ export class UserService {
       return error_response;
     }
   }
+
+  async updateUser(userId: string, params: any): Promise<any> {
+    try {
+      await this.userModel.updateOne({ _id: userId }, params);
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: null,
+        message: 'Request Successful',
+      };
+    } catch (error) {
+      let error_response = {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+        message: error,
+      };
+      return error_response;
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserSessionsService } from 'src/user-sessions/user-sessions.service';
 import { UserSessionsSchema } from 'src/user-sessions/dto/user-sessions.schema';
+import { SavingOptionSchema } from 'src/saving-option/dto/saving-option.schema';
 
 @Module({
   imports: [
